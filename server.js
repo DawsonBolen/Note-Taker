@@ -6,16 +6,16 @@ const app = express();
 
 const PORT = process.env.PORT || 3001;
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use(express.json());
-
-
-
 
 app.post('/api/notes', (req, res) => {
+    console.log('HIT MY API TO READ NOES!')
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) throw err;
+        console.log('ID IDNT HAVE AN ERROR')
+        console.log(data)
         var notes = JSON.parse(data);
         let newNote = req.body;
         newNote.id = Math.floor(Math.random() * 5000);
@@ -26,7 +26,7 @@ app.post('/api/notes', (req, res) => {
     });
 });
 
-app.delete('./api/notes/:id', (req, res) => {
+app.delete('/api/notes/:id', (req, res) => {
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) throw err;
         var notes = JSON.parse(data);
@@ -37,8 +37,6 @@ app.delete('./api/notes/:id', (req, res) => {
     });
 });
 
-
-
 app.get('/api/notes', (req, res) => {
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) throw err;
@@ -47,16 +45,13 @@ app.get('/api/notes', (req, res) => {
     });
 });
 
-app.get('/api/notes/:id', (req, res) => {
-    res.json(notes[req.params.id]);
-});
 
 app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, '/notes.html'));
+    res.sendFile(path.join(__dirname, '/public/notes.html'));
 });
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/index.html'));
+    res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
 app.listen(PORT, () => {
